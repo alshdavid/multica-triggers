@@ -198,9 +198,10 @@ async fn create_multica_issue(
   if status == reqwest::StatusCode::CONFLICT {
     let data: MulticaDuplicateResponse = response.json().await?;
     if data.code.as_deref() == Some("active_duplicate_issue")
-      && let Some(issue) = data.issue {
-        return Ok(CreateResult::Duplicate(issue));
-      }
+      && let Some(issue) = data.issue
+    {
+      return Ok(CreateResult::Duplicate(issue));
+    }
     anyhow::bail!("Multica API error {status}: active_duplicate_issue");
   }
 
