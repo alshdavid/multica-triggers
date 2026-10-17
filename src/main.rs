@@ -8,6 +8,40 @@ use clap::Subcommand;
 struct Command {
   #[clap(subcommand)]
   command: Commands,
+
+  #[clap(flatten)]
+  config: CommandConfig
+}
+
+#[derive(Debug, Parser)]
+struct CommandConfig {
+  /// Base URL of the Multica instance
+  #[clap(long, env = "MULTICA_URL")]
+  pub multica_url: String,
+
+  /// Authentication token for the Multica API
+  #[clap(long, env = "MULTICA_TOKEN", hide_env_values = true)]
+  pub multica_token: String,
+
+  /// Multica workspace identifier
+  #[clap(long, env = "MULTICA_WORKSPACE_ID")]
+  pub multica_workspace_id: String,
+
+  /// Multica project identifier
+  #[clap(long, env = "MULTICA_PROJECT_ID")]
+  pub multica_project_id: String,
+
+  /// Multica agent identifier
+  #[clap(long, env = "MULTICA_AGENT")]
+  pub multica_agent: String,
+
+  /// Authentication token for the GitHub API
+  #[clap(long, env = "GITHUB_TOKEN", hide_env_values = true)]
+  pub github_token: String,
+
+  /// Label applied to the GitHub issue once it has been imported
+  #[clap(long, env = "GITHUB_ISSUE_LABEL")]
+  pub label: Option<String>,
 }
 
 #[derive(Debug, Subcommand)]
@@ -16,9 +50,9 @@ enum Commands {
   #[clap(name = "update", visible_aliases = ["up", "u"])]
   Update(cmd::update::UpdateCommand),
 
-  /// Manage GitHub issues
-  #[clap(name = "github_issues", visible_aliases = ["github-issues", "gh-issues"])]
-  GithubIssues(cmd::github_issues::GithubIssuesCommand),
+  /// Import a single GitHub issue into Multica
+  #[clap(name = "action-github-issue")]
+  ActionGithubIssue(cmd::action_github_issue::ActionGithubIssueCommand),
 
   /// Start the service
   #[clap(name = "start")]
@@ -27,9 +61,10 @@ enum Commands {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-  match Command::parse().command {
+  let cmd =  Command::parse();
+  match cmd.command {
     Commands::Update(args) => cmd::update::main(args).await,
-    Commands::GithubIssues(args) => cmd::github_issues::main(args).await,
-    Commands::Start(args) => cmd::start::main(args).await,
+    Commands::ActionGithubIssue(args) => cmd::action_github_issue::main(cmd.config, args).await,
+    Commands::Start(args) => cmd::start::main(cmd.config, args).await,
   }
 }
