@@ -19,6 +19,10 @@ enum Commands {
   /// Manage GitHub issues
   #[clap(name = "github_issues", visible_aliases = ["github-issues", "gh-issues"])]
   GithubIssues(cmd::github_issues::GithubIssuesCommand),
+
+  /// Start the service
+  #[clap(name = "start")]
+  Start(cmd::start::StartCommand),
 }
 
 #[tokio::main]
@@ -26,5 +30,6 @@ async fn main() -> anyhow::Result<()> {
   match Command::parse().command {
     Commands::Update(args) => cmd::update::main(args).await,
     Commands::GithubIssues(args) => cmd::github_issues::main(args).await,
+    Commands::Start(args) => cmd::start::main(args).await,
   }
 }
