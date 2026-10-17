@@ -23,7 +23,7 @@ pub struct GithubWebhookRepository {
 pub struct GithubWebhookIssue {
   // pub html_url: Option<String>,
   // pub labels: Option<Vec<GithubWebhookLabel>>,
-  pub number: Option<u64>
+  pub number: Option<u64>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -34,18 +34,15 @@ pub struct GithubWebhookLabel {
 pub async fn triggers_github_post(
   mut req: uhttp::Request,
   res: uhttp::Response,
-  HandlerContext{ config, args, ..}: HandlerContext,
+  HandlerContext { config, args, .. }: HandlerContext,
 ) -> uhttp::Result<HandlerResponse> {
   // dbg!(uhttp::body::json::<serde_json::Value>(&mut req.body).await?);
 
   let body = uhttp::body::json::<GithubWebhookPayload>(&mut req.body).await?;
 
   let is_labeled = body.action.as_deref() == Some("labeled");
-  let is_sentinel = body
-    .label
-    .as_ref()
-    .and_then(|label| label.name.as_deref())
-    == Some(config.label.as_str());
+  let is_sentinel =
+    body.label.as_ref().and_then(|label| label.name.as_deref()) == Some(config.label.as_str());
 
   if is_labeled
     && is_sentinel
@@ -53,10 +50,13 @@ pub async fn triggers_github_post(
     && let Some(full_name) = repository.full_name.as_deref()
     && let Some(number) = body.issue.as_ref().and_then(|issue| issue.number)
   {
-    tokio::spawn(action_github_issue::main((*config).clone(), ActionGithubIssueCommand {
+    tokio::spawn(action_github_issue::main(
+      (*config).clone(),
+      ActionGithubIssueCommand {
         repo: full_name.to_string(),
         issue: number,
-    }));
+      },
+    ));
   }
 
   res.status(StatusCode::NO_CONTENT).body(vec![])

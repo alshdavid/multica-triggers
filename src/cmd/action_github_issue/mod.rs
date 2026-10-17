@@ -19,7 +19,10 @@ pub struct ActionGithubIssueCommand {
   pub issue: u64,
 }
 
-pub async fn main(config: CommandConfig, args: ActionGithubIssueCommand) -> anyhow::Result<()> {
+pub async fn main(
+  config: CommandConfig,
+  args: ActionGithubIssueCommand,
+) -> anyhow::Result<()> {
   let issue = github::get_issue(&config.github_token, &args.repo, args.issue).await?;
   let reference = format!("{}#{}", issue.repo_name(), issue.number);
   let title = format!("[{}] {}", reference, issue.title);

@@ -10,7 +10,7 @@ struct Command {
   command: Commands,
 
   #[clap(flatten)]
-  config: CommandConfig
+  config: CommandConfig,
 }
 
 #[derive(Debug, Clone, Parser)]
@@ -61,7 +61,7 @@ enum Commands {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-  let cmd =  Command::parse();
+  let cmd = Command::parse();
   match cmd.command {
     Commands::Update(args) => cmd::update::main(args).await,
     Commands::ActionGithubIssue(args) => cmd::action_github_issue::main(cmd.config, args).await,
