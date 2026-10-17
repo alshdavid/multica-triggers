@@ -15,11 +15,16 @@ enum Commands {
   /// Update the binary to the latest release
   #[clap(name = "update", visible_aliases = ["up", "u"])]
   Update(cmd::update::UpdateCommand),
+
+  /// Manage GitHub issues
+  #[clap(name = "github_issues", visible_aliases = ["github-issues", "gh-issues"])]
+  GithubIssues(cmd::github_issues::GithubIssuesCommand),
 }
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
   match Command::parse().command {
     Commands::Update(args) => cmd::update::main(args).await,
+    Commands::GithubIssues(args) => cmd::github_issues::main(args).await,
   }
 }
