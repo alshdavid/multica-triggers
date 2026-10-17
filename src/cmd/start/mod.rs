@@ -18,38 +18,6 @@ pub struct StartCommand {
   /// Port to bind the server to
   #[clap(long, env = "SERVER_PORT", default_value_t = 5200, hide_env_values = true)]
   pub port: u16,
-
-  /// Base URL of the Multica instance
-  #[clap(long, env = "MULTICA_URL", hide_env_values = true)]
-  pub multica_url: String,
-
-  /// Authentication token for the Multica API
-  #[clap(long, env = "MULTICA_TOKEN", hide_env_values = true)]
-  pub multica_token: String,
-
-  /// Multica workspace identifier
-  #[clap(long, env = "MULTICA_WORKSPACE_ID", hide_env_values = true)]
-  pub multica_workspace_id: String,
-
-  /// Multica project identifier
-  #[clap(long, env = "MULTICA_PROJECT_ID", hide_env_values = true)]
-  pub multica_project_id: String,
-
-  /// Multica agent identifier
-  #[clap(long, env = "MULTICA_AGENT", hide_env_values = true)]
-  pub multica_agent: String,
-
-  /// Authentication token for the GitHub API
-  #[clap(long, env = "GITHUB_TOKEN", hide_env_values = true)]
-  pub github_token: String,
-
-  /// GitHub account slug (owner/organization)
-  #[clap(long, env = "GITHUB_ACCOUNT_SLUG", hide_env_values = true)]
-  pub github_account_slug: String,
-
-  /// Label applied to GitHub issues
-  #[clap(long, env = "GITHUB_ISSUE_LABEL", hide_env_values = true)]
-  pub github_issue_label: String,
 }
 
 pub async fn main(config: CommandConfig, args: StartCommand) -> anyhow::Result<()> {

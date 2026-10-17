@@ -9,7 +9,7 @@ use super::MulticaIssue;
 pub struct CreateIssue<'a> {
   pub title: &'a str,
   pub description: &'a str,
-  pub project_id: &'a str,
+  pub project_id: Option<&'a str>,
   pub agent: &'a str,
 }
 

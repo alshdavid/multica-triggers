@@ -13,7 +13,7 @@ struct Command {
   config: CommandConfig
 }
 
-#[derive(Debug, Parser)]
+#[derive(Debug, Clone, Parser)]
 struct CommandConfig {
   /// Base URL of the Multica instance
   #[clap(long, env = "MULTICA_URL")]
@@ -29,7 +29,7 @@ struct CommandConfig {
 
   /// Multica project identifier
   #[clap(long, env = "MULTICA_PROJECT_ID")]
-  pub multica_project_id: String,
+  pub multica_project_id: Option<String>,
 
   /// Multica agent identifier
   #[clap(long, env = "MULTICA_AGENT")]
@@ -41,7 +41,7 @@ struct CommandConfig {
 
   /// Label applied to the GitHub issue once it has been imported
   #[clap(long, env = "GITHUB_ISSUE_LABEL")]
-  pub label: Option<String>,
+  pub label: String,
 }
 
 #[derive(Debug, Subcommand)]

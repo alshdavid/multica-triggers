@@ -32,7 +32,7 @@ pub async fn main(config: CommandConfig, args: ActionGithubIssueCommand) -> anyh
     CreateIssue {
       title: &title,
       description: &description,
-      project_id: &config.multica_project_id,
+      project_id: config.multica_project_id.as_deref(),
       agent: &config.multica_agent,
     },
   )
@@ -53,10 +53,8 @@ pub async fn main(config: CommandConfig, args: ActionGithubIssueCommand) -> anyh
     }
   }
 
-  if let Some(label) = &config.label {
-    github::add_label(&config.github_token, &issue, label).await?;
-    println!("         labelled {} as {}", reference, label);
-  }
+  github::add_label(&config.github_token, &issue, &config.label).await?;
+  println!("         labelled {} as {}", reference, config.label);
 
   Ok(())
 }
