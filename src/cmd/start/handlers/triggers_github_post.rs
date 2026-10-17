@@ -34,7 +34,7 @@ pub struct GithubWebhookLabel {
 pub async fn triggers_github_post(
   mut req: uhttp::Request,
   res: uhttp::Response,
-  HandlerContext { config, args, .. }: HandlerContext,
+  HandlerContext { config, .. }: HandlerContext,
 ) -> uhttp::Result<HandlerResponse> {
   // dbg!(uhttp::body::json::<serde_json::Value>(&mut req.body).await?);
 
